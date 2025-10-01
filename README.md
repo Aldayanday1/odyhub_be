@@ -1047,7 +1047,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 Jika ada pertanyaan atau issue:
-- 💡 [Report Bug & Request Feature](https://github.com/Aldayanday1/odyhub_be/issues)
+- 💡 [Report Bug or Request Feature](https://github.com/Aldayanday1/odyhub_be/issues)
 - 📧 Email: [onlymarfa69@gmail.com](mailto:onlymarfa69@gmail.com)
 
 ---
