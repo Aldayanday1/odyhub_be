@@ -1,0 +1,62 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Sensitive Data ###
+# Environment variables dengan data sensitif
+.env
+.env.local
+.env.*.local
+
+# Application properties dengan credentials
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# Log files yang mungkin berisi data sensitif
+*.log
+logs/
+hs_err_*.log
+replay_pid*.log
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Upload folders dengan user data
+uploads/
+status-laporan-images/
+
+# IDE specific files
+nbactions.tmp
