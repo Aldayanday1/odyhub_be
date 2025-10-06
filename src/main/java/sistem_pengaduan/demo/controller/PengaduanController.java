@@ -49,7 +49,7 @@ public class PengaduanController {
     private JwtUtil jwtUtil;
 
     // ----------------------- ADD PENGADUAN -----------------------
-    
+
     @PostMapping("/add")
     public ResponseEntity<?> addPengaduan(HttpServletRequest request,
             @RequestParam("gambar") MultipartFile gambar,
@@ -74,7 +74,8 @@ public class PengaduanController {
 
             // Memeriksa apakah pengguna diotorisasi
             if (!jwtUtil.validateToken(token, email) || !"USER".equals(jwtUtil.extractRole(token))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token tidak valid atau peran tidak sesuai.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Token tidak valid atau peran tidak sesuai.");
             }
 
             // Mengambil pengguna berdasarkan email
@@ -85,7 +86,7 @@ public class PengaduanController {
 
             // Menyimpan gambar ke penyimpanan dan mendapat path-nya
             String gambarPath = fileStorageService.storeFile(gambar);
-            
+
             // Membuat instance baru dari Pengaduan
             Pengaduan pengaduan = new Pengaduan(judul, alamat, gambarPath, deskripsi, kategori, latitude, longitude);
 
@@ -105,7 +106,7 @@ public class PengaduanController {
     }
 
     // ------------------------- GET ALL -------------------------
-    
+
     @GetMapping("/all")
     public ResponseEntity<?> getAllPengaduans() {
         try {
@@ -116,8 +117,8 @@ public class PengaduanController {
         }
     }
 
-   // ----------------------- GET MY-PENGADUAN -----------------------
-    
+    // ----------------------- GET MY-PENGADUAN -----------------------
+
     @GetMapping("/my-pengaduan")
     public ResponseEntity<?> getMyPengaduan(HttpServletRequest request) {
         try {
@@ -134,7 +135,8 @@ public class PengaduanController {
 
             // Memeriksa apakah pengguna diotorisasi sebagai USER
             if (!jwtUtil.validateToken(token, email) || !"USER".equals(jwtUtil.extractRole(token))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Anda tidak diizinkan untuk mengakses fitur ini.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Anda tidak diizinkan untuk mengakses fitur ini.");
             }
 
             // Mengambil pengguna berdasarkan email
@@ -155,8 +157,9 @@ public class PengaduanController {
         }
     }
 
-    // ------------- GET PENGADUAN BY STATUS (PENDING, PROGRESS, DONE) ----------- ADMIN
-    
+    // ------------- GET PENGADUAN BY STATUS (PENDING, PROGRESS, DONE) -----------
+    // ADMIN
+
     @GetMapping("/pengaduan-by-status/{status}")
     public ResponseEntity<?> getPengaduanByStatus(@PathVariable Status status) {
         try {
@@ -168,7 +171,7 @@ public class PengaduanController {
     }
 
     // ----------------------- GET GRAPH COUNT ----------------------- ADMIN
-    
+
     @GetMapping("/daily-count")
     public ResponseEntity<?> getDailyPengaduanCount(HttpServletRequest request) {
 
@@ -186,7 +189,8 @@ public class PengaduanController {
 
             // Memeriksa apakah pengguna diotorisasi sebagai ADMIN
             if (!jwtUtil.validateToken(token, email) || !"ADMIN".equals(jwtUtil.extractRole(token))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Anda tidak diizinkan untuk mengakses fitur ini.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Anda tidak diizinkan untuk mengakses fitur ini.");
             }
 
             // Mendapatkan tanggal hari ini
@@ -195,7 +199,8 @@ public class PengaduanController {
             // Map untuk menyimpan jumlah data pengaduan per hari
             Map<String, Integer> dailyCounts = new HashMap<>();
 
-            // Loop untuk mengambil data pengaduan per hari untuk 7 hari terakhir, dimulai dari hari ini mundur
+            // Loop untuk mengambil data pengaduan per hari untuk 7 hari terakhir, dimulai
+            // dari hari ini mundur
             for (int i = 0; i < 7; i++) {
 
                 // Mengurangi hari dari tanggal hari ini
@@ -209,7 +214,7 @@ public class PengaduanController {
             }
 
             return ResponseEntity.ok(dailyCounts);
-            
+
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token kadaluwarsa.");
         } catch (Exception e) {
@@ -218,15 +223,15 @@ public class PengaduanController {
         }
     }
 
-    // ---------------------------- GET BY ID ---------------------------- 
-    
+    // ---------------------------- GET BY ID ----------------------------
+
     @GetMapping("/{id}")
     public Optional<Pengaduan> getPengaduanById(@PathVariable("id") Integer id) {
         return pengaduanService.getPengaduanById(id);
     }
-    
-    // ----------------------- GET SERVE FILE (IMAGE) ----------------------- 
-    
+
+    // ----------------------- GET SERVE FILE (IMAGE) -----------------------
+
     // Serve File (Mengakses gambar yg ada di server lalu menampilkannya)
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -248,11 +253,13 @@ public class PengaduanController {
                     MediaType.APPLICATION_OCTET_STREAM;
             };
 
-            // Jika jenis file tidak dikenali, atur tipe konten respons menjadi APPLICATION_OCTET_STREAM
+            // Jika jenis file tidak dikenali, atur tipe konten respons menjadi
+            // APPLICATION_OCTET_STREAM
             if (mediaType.equals(MediaType.APPLICATION_OCTET_STREAM)) {
                 return ResponseEntity.ok()
                         .contentType(mediaType)
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline") // Mengatur untuk menampilkan gambar di browser
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline") // Mengatur untuk menampilkan gambar di
+                                                                           // browser
                         .body(file);
             } else {
                 return ResponseEntity.ok()
@@ -265,8 +272,8 @@ public class PengaduanController {
         }
     }
 
-    // ---------------------------- UPDATE PENGADUAN ---------------------------- 
-    
+    // ---------------------------- UPDATE PENGADUAN ----------------------------
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updatePengaduan(HttpServletRequest request, @PathVariable("id") Integer id,
             @RequestParam(value = "gambar", required = false) MultipartFile gambar,
@@ -291,7 +298,8 @@ public class PengaduanController {
 
             // Memeriksa apakah pengguna diotorisasi sebagai USER
             if (!jwtUtil.validateToken(token, email) || !"USER".equals(jwtUtil.extractRole(token))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Anda tidak diizinkan untuk mengakses fitur ini.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Anda tidak diizinkan untuk mengakses fitur ini.");
             }
 
             // Mengambil pengguna berdasarkan email
@@ -307,7 +315,8 @@ public class PengaduanController {
 
                 // Memeriksa apakah pengaduan terkait dengan pengguna yang melakukan permintaan
                 if (!pengaduan.getUser().getId().equals(user.getId())) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Anda tidak diizinkan untuk mengubah pengaduan ini.");
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("Anda tidak diizinkan untuk mengubah pengaduan ini.");
                 }
 
                 // Melakukan pembaruan data pengaduan jika terdapat perubahan
@@ -373,8 +382,8 @@ public class PengaduanController {
         }
     }
 
-    // ---------------------------- DELETE PENGADUAN ---------------------------- 
-    
+    // ---------------------------- DELETE PENGADUAN ----------------------------
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePengaduan(HttpServletRequest request, @PathVariable("id") Integer id) {
         try {
@@ -391,7 +400,8 @@ public class PengaduanController {
 
             // Memeriksa apakah pengguna diotorisasi sebagai USER
             if (!jwtUtil.validateToken(token, email) || !"USER".equals(jwtUtil.extractRole(token))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Anda tidak diizinkan untuk mengakses fitur ini.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Anda tidak diizinkan untuk mengakses fitur ini.");
             }
 
             // Mengambil pengguna berdasarkan email
@@ -407,7 +417,8 @@ public class PengaduanController {
 
                 // Memeriksa apakah pengaduan terkait dengan pengguna yang melakukan permintaan
                 if (!pengaduan.getUser().getId().equals(user.getId())) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Anda tidak diizinkan untuk menghapus pengaduan ini.");
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("Anda tidak diizinkan untuk menghapus pengaduan ini.");
                 }
 
                 // Menghapus pengaduan
@@ -424,8 +435,9 @@ public class PengaduanController {
         }
     }
 
-    // ---------------------------- FILTERING BY CATEGORY ---------------------------- 
-    
+    // ---------------------------- FILTERING BY CATEGORY
+    // ----------------------------
+
     @GetMapping("/kategori/infrastruktur")
     public List<Pengaduan> getInfrastruktur() {
         return pengaduanService.getPengaduanByKategori(Kategori.INFRASTRUKTUR);

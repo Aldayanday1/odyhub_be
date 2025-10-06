@@ -816,10 +816,8 @@ sistem_pengaduan/
 ├── uploads/                      # User uploaded images
 ├── status-laporan-images/        # Admin response images
 ├── pom.xml
-├── README.md
-├── EMAIL_SETUP_GUIDE.md
-├── PORT_CONFLICT_GUIDE.md
-└── start-app.bat
+└── README.md
+
 ```
 
 ---

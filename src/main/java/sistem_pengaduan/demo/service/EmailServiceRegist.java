@@ -19,7 +19,7 @@ public class EmailServiceRegist {
 
         String htmlMsg = "<html><body style='font-family: Arial, sans-serif; color: #333333;'>"
                 + "<div style='margin: auto; max-width: 600px; padding: 20px; text-align: center;'>"
-                + "<h1 style='color: #333333;'>owdy</h1>"
+                + "<h1 style='color: #333333;'>odyhub</h1>"
                 + "<h2 style='color: #333333;'>Let's Sign Up</h2>"
                 + "<p style='color: #666666;'>Hi, " + nama + "!</p>"
                 + "<p style='color: #666666;'>Use this code to Sign Up confidentially.</p>"

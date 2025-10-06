@@ -59,16 +59,18 @@ public class Pengaduan {
     @JsonBackReference
     private User user;
 
-    // @CreationTimestamp = digunakan untuk menandai atribut yang nilainya harus diisi secara otomatis saat entitas dibuat dan tidak dapat diubah
+    // @CreationTimestamp = digunakan untuk menandai atribut yang nilainya harus
+    // diisi secara otomatis saat entitas dibuat dan tidak dapat diubah
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    // @UpdateTimestamp = digunakan untuk menandai atribut yang nilainya harus diperbarui secara otomatis setiap kali entitas diperbarui
+    // @UpdateTimestamp = digunakan untuk menandai atribut yang nilainya harus
+    // diperbarui secara otomatis setiap kali entitas diperbarui
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    
+
     @OneToMany(mappedBy = "pengaduan", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<StatusLaporan> statusLaporanList = new ArrayList<>();
@@ -76,7 +78,8 @@ public class Pengaduan {
     public Pengaduan() {
     }
 
-    public Pengaduan(String judul, String alamat, String gambar, String deskripsi, Kategori kategori, Double latitude, Double longitude) {
+    public Pengaduan(String judul, String alamat, String gambar, String deskripsi, Kategori kategori, Double latitude,
+            Double longitude) {
         this.judul = judul;
         this.alamat = alamat;
         this.gambar = gambar;
@@ -175,7 +178,7 @@ public class Pengaduan {
     public LocalDateTime setUpdatedAt(LocalDateTime now) {
         return updatedAt;
     }
-    
+
     // Metode getter untuk statusLaporanList
     public List<StatusLaporan> getStatusLaporanList() {
         return statusLaporanList;
@@ -186,35 +189,69 @@ public class Pengaduan {
         this.statusLaporanList = statusLaporanList;
     }
 
-    // -------- GETTER UNTUK MENDAPATKAN NAMA & PROFILE IMAGE PEMBUAT  --------
-    
+    // -------- GETTER UNTUK MENDAPATKAN NAMA & PROFILE IMAGE PEMBUAT --------
+
     public String getNamaPembuat() {
         return user != null ? user.getNama() : null;
     }
 
     public String getProfileImagePembuat() {
         return user != null && user.getUserProfile() != null
-                ? user.getUserProfile().getProfileImage() : null;
+                ? user.getUserProfile().getProfileImage()
+                : null;
     }
-    
-    // -------- GETTER UNTUK MENDAPATKAN STATUS LAPORAN & TANGGAPAN  --------
-    
+
+    // -------- GETTER UNTUK MENDAPATKAN STATUS LAPORAN & TANGGAPAN --------
+
+    // @Transient
+    // // getStatus -> status (get nya dihilangkan, Status s nya lower case)
+    // public Status getStatus() {
+    // if (getStatusLaporanList() != null && !getStatusLaporanList().isEmpty()) {
+    // // .size() - 1) -> mengakses daftar terakhir dari list
+    // return getStatusLaporanList().get(getStatusLaporanList().size() -
+    // 1).getStatusBaru();
+    // }
+    // return null;
+    // }
+
+    // @Transient
+    // // getTanggapan -> tanggapan (get nya dihilangkan, Tanggapan t nya lower
+    // case)
+    // public String getTanggapan() {
+    // // .size() - 1) -> mengakses daftar terakhir dari list
+    // if (getStatusLaporanList() != null && !getStatusLaporanList().isEmpty()) {
+    // return getStatusLaporanList().get(getStatusLaporanList().size() -
+    // 1).getTanggapan();
+    // }
+    // return null;
+    // }
+
     @Transient
-    // getStatus -> status (get nya dihilangkan, Status s nya lower case)
-    public Status getStatus() {
-        if (getStatusLaporanList() != null && !getStatusLaporanList().isEmpty()) {
-            //  .size() - 1) -> mengakses daftar terakhir dari list
-            return getStatusLaporanList().get(getStatusLaporanList().size() - 1).getStatusBaru();
+    public String getStatus() {
+        if (statusLaporanList != null && !statusLaporanList.isEmpty()) {
+            // Get the latest status (last in the list)
+            StatusLaporan latestStatus = statusLaporanList.get(statusLaporanList.size() - 1);
+            return latestStatus.getStatusBaru() != null ? latestStatus.getStatusBaru().toString() : null;
         }
         return null;
     }
 
     @Transient
-    // getTanggapan -> tanggapan (get nya dihilangkan, Tanggapan t nya lower case)
     public String getTanggapan() {
-        //  .size() - 1) -> mengakses daftar terakhir dari list
-        if (getStatusLaporanList() != null && !getStatusLaporanList().isEmpty()) {
-            return getStatusLaporanList().get(getStatusLaporanList().size() - 1).getTanggapan();
+        if (statusLaporanList != null && !statusLaporanList.isEmpty()) {
+            // Get the latest status response
+            StatusLaporan latestStatus = statusLaporanList.get(statusLaporanList.size() - 1);
+            return latestStatus.getTanggapan();
+        }
+        return null;
+    }
+
+    @Transient
+    public String getGambarTanggapan() {
+        if (statusLaporanList != null && !statusLaporanList.isEmpty()) {
+            // Get the latest status image
+            StatusLaporan latestStatus = statusLaporanList.get(statusLaporanList.size() - 1);
+            return latestStatus.getGambar();
         }
         return null;
     }
